@@ -6,6 +6,8 @@ Email alerts for negative reviews on Zomato
   
   Please install and setup MySQL and use the username and password in the config file.
 
+  Make sure mysql server is up and running before moving further.
+
 ## Update config file
 * Get Zomato API key
 * Get SendGrid API key
@@ -45,4 +47,7 @@ Copy the Sendgrid API key in the command below -
 * python get_reviews.py
 
 ### Windows
+TODO
+
+### MAC OS X
 TODO

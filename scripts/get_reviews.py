@@ -4,7 +4,7 @@
 from __future__ import division
 from config import *
 
-import os
+import os, sys
 import subprocess
 
 import json
@@ -168,16 +168,18 @@ def setup_configuration(command):
 
 
 if __name__ == '__main__':
-    
-    # for command in SHELL_COMMANDS:
-    #     setup_configuration(command)
+    if sys.platform.startswith('linux'):
+        # for command in SHELL_COMMANDS:
+        #     setup_configuration(command)
 
-    '''Connect to database'''
-    con = db.connect(user=DB_USER, passwd=DB_PASSWORD)
-    cur = con.cursor()
-    mysql_setup('LOGS')
-    mysql_setup('REVIEWS')
+        '''Connect to database'''
+        con = db.connect(user=DB_USER, passwd=DB_PASSWORD)
+        cur = con.cursor()
+        mysql_setup('LOGS')
+        mysql_setup('REVIEWS')
 
-    get_review()
-    mysql_query()
-    con.close()
+        get_review()
+        mysql_query()
+        con.close()
+    else:
+        print 'To be implemented'
