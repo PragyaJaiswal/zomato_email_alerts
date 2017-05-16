@@ -1,0 +1,12 @@
+appdirs==1.4.3
+logging==0.4.9.6
+MySQL-python==1.2.5
+nltk==3.2.2
+packaging==16.8
+peewee==2.10.1
+pyparsing==2.2.0
+python-http-client==2.2.1
+requests==2.14.2
+sendgrid==4.1.0
+six==1.10.0
+textblob==0.12.0
