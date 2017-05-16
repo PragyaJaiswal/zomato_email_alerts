@@ -5,14 +5,15 @@ from __future__ import division
 from config import *
 
 import os
+import subprocess
+
 import json
-
-import requests
-
 import time
 import datetime
 
 import hashlib
+
+import requests
 
 import sendgrid
 from sendgrid.helpers.mail import *
@@ -161,13 +162,20 @@ def send_email(subject, body):
     except Exception, e:
         mysql_log('SEND ALERT', str(os.environ['USER']), "Alert failed to be sent. Exception handled. {0}". format(e))
 
+def setup_configuration(command):
+    subprocess.check_call(command, shell = True)
 
 if __name__ == '__main__':
+    
+    for command in SHELL_COMMANDS:
+        setup_configuration(command)
+
     '''Connect to database'''
     con = db.connect(user=DB_USER, passwd=DB_PASSWORD)
     cur = con.cursor()
-    mysql_setup('LOGS')
-    mysql_setup('REVIEWS')
+    # mysql_setup('LOGS')
+    # mysql_setup('REVIEWS')
 
-    get_review()
-    mysql_query()
+    # get_review()
+    # mysql_query()
+    # con.close()
