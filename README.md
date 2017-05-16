@@ -12,5 +12,6 @@ Email alerts for negative reviews on Zomato
 * crontab -e
 
   _Copy and paste the following in the editor that opens up -_
+  
   0 0 * * 2,4 /usr/bin/python /path/to/your/script.py > /home/someuser/cronlogs/clean_tmp_dir.log >/dev/null 2>&1
 
