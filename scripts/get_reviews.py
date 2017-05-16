@@ -162,8 +162,10 @@ def send_email(subject, body):
     except Exception, e:
         mysql_log('SEND ALERT', str(os.environ['USER']), "Alert failed to be sent. Exception handled. {0}". format(e))
 
+
 def setup_configuration(command):
     subprocess.check_call(command, shell = True)
+
 
 if __name__ == '__main__':
     
@@ -178,4 +180,4 @@ if __name__ == '__main__':
 
     # get_review()
     # mysql_query()
-    # con.close()
+    con.close()
