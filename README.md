@@ -8,9 +8,9 @@ Email alerts for negative reviews on Zomato
 * cd </path/to/virtualenv/virtualenvname>
 * source bin/activate
 
-Copy the project folder(zomato_email_alerts) in the virtualenv folder just created.
+Copy the project folder in the virtualenv folder just created.
 
-* cd zomato_email_alerts/scripts
+* cd <project_folder_name>/scripts
 * echo "export SENDGRID_API_KEY= '<YOUR_API_KEY>' " > sendgrid.env
 
 <!-- Set up cronjob for periodically running the script. -->
