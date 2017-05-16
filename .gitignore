@@ -88,6 +88,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
-/scripts/config.py
+
 /scripts/sendgrid
 /scripts/sendgrid.env

@@ -169,15 +169,15 @@ def setup_configuration(command):
 
 if __name__ == '__main__':
     
-    for command in SHELL_COMMANDS:
-        setup_configuration(command)
+    # for command in SHELL_COMMANDS:
+    #     setup_configuration(command)
 
     '''Connect to database'''
     con = db.connect(user=DB_USER, passwd=DB_PASSWORD)
     cur = con.cursor()
-    # mysql_setup('LOGS')
-    # mysql_setup('REVIEWS')
+    mysql_setup('LOGS')
+    mysql_setup('REVIEWS')
 
-    # get_review()
-    # mysql_query()
+    get_review()
+    mysql_query()
     con.close()
