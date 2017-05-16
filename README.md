@@ -3,6 +3,7 @@ Email alerts for negative reviews on Zomato
 
 ## Dependency
 * MySQL
+  
   Please install and setup MySQL and use the username and password in the config file.
 
 ## Update config file
@@ -25,7 +26,7 @@ Create a new virtual environment
 
 Copy the cloned repository in the virtualenv folder just created using the following -
 
-* cd <cloned repository>/scripts
+* cd <cloned_repository>/scripts
 
 Copy the Sendgrid API key in the command below - 
 
