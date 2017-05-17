@@ -45,7 +45,7 @@ Copy the Sendgrid API key in the command below -
 
   0 0 * * * source </path/to/virtualenv/virtualenvname>/bin/activate
 
-  0 0 * * * </path/to/virtualenv/virtualenvname>/bin/python </path/to/virtualenv/virtualenvname>/<cloned_repository>/scripts/get_reviews.py
+  0 0 * * * </path/to/virtualenv/virtualenvname>/bin/python </path/to/virtualenv/virtualenvname>/<cloned_repository>/scripts/get_reviews.py > /tmp/cron.log 2>&1
 
 * sudo apt-get install python-pip python-dev libmysqlclient-dev
 * pip install -r requirements.txt
