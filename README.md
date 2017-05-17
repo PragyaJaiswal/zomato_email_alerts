@@ -78,7 +78,7 @@ Copy the Sendgrid API key in the command below -
   python get_reviews.py
 
 
-### MAC OS X
+### MacOS
 * Set up a virtual environment and activate it.
 * Copy the cloned repository to the virtual env folder just created. Change to the scripts directory within the project.
 * Install the dependencies stated above.

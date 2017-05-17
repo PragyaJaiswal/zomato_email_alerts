@@ -175,18 +175,17 @@ def setup_configuration(command):
 
 
 if __name__ == '__main__':
-    if sys.platform.startswith('linux'):
-        # for command in SHELL_COMMANDS:
-        #     setup_configuration(command)
+    '''Connect to database'''
+    con = db.connect(user=DB_USER, passwd=DB_PASSWORD)
+    cur = con.cursor()
+    MySQL().mysql_setup('LOGS')
+    MySQL().mysql_setup('REVIEWS')
 
-        '''Connect to database'''
-        con = db.connect(user=DB_USER, passwd=DB_PASSWORD)
-        cur = con.cursor()
-        MySQL().mysql_setup('LOGS')
-        MySQL().mysql_setup('REVIEWS')
-
-        get_review()
-        MySQL().mysql_query()
-        con.close()
-    else:
-        print 'To be implemented'
+    get_review()
+    MySQL().mysql_query()
+    con.close()
+    # if sys.platform.startswith('linux'):
+    #     for command in SHELL_COMMANDS:
+    #         setup_configuration(command)
+    # else:
+    #     print 'To be implemented'
