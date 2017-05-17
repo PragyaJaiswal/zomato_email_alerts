@@ -7,11 +7,15 @@ Access table 'REVIEWS' to look at reviews dumped for the restaurant IDs mentione
 The email alert tells the percentage of negative reviews present in all the reviews that have been processed. The body of the email contains how many reviews were processed, number of reviews that were classified as negative, and a few negative reviews.
 
 ## Dependency
+* python-pip
+* python-dev
+* libmysqlclient-dev
 * MySQL
   
   Please install and setup MySQL and use the username and password in the config file.
 
   Make sure mysql server is up and running before moving further.
+
 
 ## Update config file
 * Get Zomato API key
@@ -20,6 +24,7 @@ The email alert tells the percentage of negative reviews present in all the revi
 * Add/Delete Zomato Restaurant IDs, if desired.
 * Edit the config file to change the email sender and recipient
 * Edit the config file to add MySQL username and password
+
 
 ## Configure and setup the repository
 ### Unix
@@ -57,11 +62,36 @@ Copy the Sendgrid API key in the command below -
 * pip install -r requirements.txt
 * python get_reviews.py
 
+
 ### Windows
-TODO
+* Set up a virtual environment and activate it.
+* Copy the cloned repository to the virtual env folder just created. Change to the scripts directory within the project.
+* Install the dependencies stated above.
+* Create a file named sendgrid.env and copy paste the following after inserting your SendGrid API key.
+  
+  export SENDGRID_API_KEY= '<YOUR_API_KEY>'
+
+* Install requirements.txt (pip install -r requirements.txt)
+* Set up a mechanism to run get_reviews.py periodically, within the virtual environment
+* Run the following command
+  
+  python get_reviews.py
+
 
 ### MAC OS X
-TODO
+* Set up a virtual environment and activate it.
+* Copy the cloned repository to the virtual env folder just created. Change to the scripts directory within the project.
+* Install the dependencies stated above.
+* Create a file named sendgrid.env and copy paste the following after inserting your SendGrid API key.
+  
+  export SENDGRID_API_KEY= '<YOUR_API_KEY>'
+
+* Install requirements.txt (pip install -r requirements.txt)
+* Set up a mechanism to run get_reviews.py periodically, within the virtual environment. Could setup crontab as mentioned in the Unix section above.
+* Run the following command
+
+    python get_reviews.py
+
 
 ## Enhancements
 * Fetch only new reviews from Zomato
