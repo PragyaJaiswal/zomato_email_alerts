@@ -27,7 +27,7 @@ import MySQLdb as db
 def get_review():
     restaurant_reviews = {}
     for res_id in ZOMATO_RES_IDS:
-        MySQL().mysql_log('FETCH_REVIEWS', str(os.environ['USER']), 'Starting fetch for res_id {0}'.format(res_id))
+        MySQL().mysql_log('FETCH_REVIEWS', str(os.environ['LOGNAME']), 'Starting fetch for res_id {0}'.format(res_id))
         try:
             r = requests.get(
                     'https://developers.zomato.com/api/v2.1/reviews?res_id={0}'.format(res_id),
@@ -43,13 +43,13 @@ def get_review():
         except requests.ConnectionError as e:
             print 'Error', res_id
             if e:
-                MySQL().mysql_log('FETCH_REVIEWS', str(os.environ['USER']), 'Fetch failed for {0}. Connection Error.'.format(res_id))
+                MySQL().mysql_log('FETCH_REVIEWS', str(os.environ['LOGNAME']), 'Fetch failed for {0}. Connection Error.'.format(res_id))
             else:
-                MySQL().mysql_log('FETCH_REVIEWS', str(os.environ['USER']), 'Fetch failed for {0}.'.format(res_id))
+                MySQL().mysql_log('FETCH_REVIEWS', str(os.environ['LOGNAME']), 'Fetch failed for {0}.'.format(res_id))
 
 
     for res_id, all_reviews in restaurant_reviews.iteritems():
-        MySQL().mysql_log('DUMP_REVIEWS', str(os.environ['USER']), 'Dumping reviews for {0}.'.format(res_id))
+        MySQL().mysql_log('DUMP_REVIEWS', str(os.environ['LOGNAME']), 'Dumping reviews for {0}.'.format(res_id))
         for review in all_reviews:
             '''
             review[0] - Review
@@ -58,14 +58,13 @@ def get_review():
             try:
                 MySQL().mysql_dump(res_id, review[0].encode('utf-8'), review[1])
             except Exception, e:
-                MySQL().mysql_log('DUMP_REVIEWS', str(os.environ['USER']), 'Failed to dump reviews for {0}.'.format(res_id))
+                MySQL().mysql_log('DUMP_REVIEWS', str(os.environ['LOGNAME']), 'Failed to dump reviews for {0}.'.format(res_id))
 
 
 class MySQL(object):
     """docstring for MySQL"""
     def __init__(self):
         super(MySQL, self).__init__()
-        
 
     def mysql_setup(self, table_name = 'REVIEWS', database_name = 'zomato_alerts'):
         cur.execute('CREATE DATABASE IF NOT EXISTS {0};'.format(database_name))
@@ -85,6 +84,7 @@ class MySQL(object):
                 RES_RATING  CHAR(20)        NOT NULL,
                 PROCESSED   BOOLEAN         NOT NULL,
                 Class       CHAR(20)        NULL)'''.format(table_name))
+        con.commit()
 
 
     def mysql_dump(self, res_id, review, rating, table_name = 'REVIEWS', database_name = 'zomato_alerts'):
@@ -93,7 +93,7 @@ class MySQL(object):
 
 
     def mysql_log(self, action, user, message, table_name = 'LOGS', database_name = 'zomato_alerts'):
-        cur.execute('use {0}'.format(database_name))
+        cur.execute('use {0};'.format(database_name))
         cur.execute('''INSERT INTO {0}(TIMESTAMP, ACTION, USER, DB_USER, META_DATA) VALUES (%s, %s, %s, %s, %s)'''.format(table_name),
             (
                 datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
@@ -112,12 +112,12 @@ class MySQL(object):
         total_reviews_processed = len(data)
         
         if total_reviews_processed == 0:
-            MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['USER']), 'No unprocessed reviews.')
+            MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['LOGNAME']), 'No unprocessed reviews.')
         else:
-            MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['USER']), 'Processing reviews.')
+            MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['LOGNAME']), 'Processing reviews.')
             for row in data:
                 count += 1
-                MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['USER']), 'Processed {0} of {1} unprocessed reviews.'.format(count, total_reviews_processed))
+                MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['LOGNAME']), 'Processed {0} of {1} unprocessed reviews.'.format(count, total_reviews_processed))
                 print 'Processed {0} of {1} unprocessed reviews.'.format(count, total_reviews_processed)
                 '''
                 row[0] - review_hash
@@ -127,7 +127,7 @@ class MySQL(object):
                 row[4] - processed status
                 '''
                 sentiment_class = sentiment_analysis(row[2], row[3])
-                MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['USER']), "Sentiment Calculated. Updating reviews' process status.")
+                MySQL().mysql_log('PROCESS_REVIEWS', str(os.environ['LOGNAME']), "Sentiment Calculated. Updating reviews' process status.")
                 if sentiment_class.classification == 'neg' and float(row[3]) <= float(3):
                     neg_count+=1
                     neg_reviews.append(row[2])
@@ -137,13 +137,13 @@ class MySQL(object):
                 con.commit()
             
             if neg_count > 0:
-                MySQL().mysql_log('GENERATE ALERT', str(os.environ['USER']), 'Creating subject and body of email.')
+                MySQL().mysql_log('GENERATE ALERT', str(os.environ['LOGNAME']), 'Creating subject and body of email.')
                 subject = 'Percentage of negative reviews: {0}'.format((neg_count/total_reviews_processed)*100)
                 body = 'Number of reviews processed: {0}\nNumber of negative reviews: {1}\nSome negative reviews: {2}'.format(total_reviews_processed, neg_count, str(neg_reviews[:3]))
                 # print subject, body
                 send_email(subject, body)
             else:
-                MySQL().mysql_log('ALERT NOT NEEDED', str(os.environ['USER']), 'Yay! No negative reviews found among new reviews.')
+                MySQL().mysql_log('ALERT NOT NEEDED', str(os.environ['LOGNAME']), 'Yay! No negative reviews found among new reviews.')
 
 
 def sentiment_analysis(review, rating):
@@ -155,7 +155,7 @@ def sentiment_analysis(review, rating):
 
 
 def send_email(subject, body):
-    MySQL().mysql_log('SEND ALERT', str(os.environ['USER']), "Negative reviews found Preparing alert.")
+    MySQL().mysql_log('SEND ALERT', str(os.environ['LOGNAME']), "Negative reviews found Preparing alert.")
     try:
         sg = sendgrid.SendGridAPIClient(apikey = SENDGRID_API_KEY)
         
@@ -166,7 +166,7 @@ def send_email(subject, body):
         mail = Mail(from_email, subject, to_email, content)
         response = sg.client.mail.send.post(request_body=mail.get())
     except Exception, e:
-        MySQL().mysql_log('SEND ALERT', str(os.environ['USER']), "Alert failed to be sent. Exception handled. {0}". format(e))
+        MySQL().mysql_log('SEND ALERT', str(os.environ['LOGNAME']), "Alert failed to be sent. Exception handled. {0}". format(e))
 
 
 def setup_configuration(command):

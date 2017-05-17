@@ -11,6 +11,7 @@ Email alerts for negative reviews on Zomato
 ## Update config file
 * Get Zomato API key
 * Get SendGrid API key
+* Edit the config file and add the API keys
 * Edit the config file to change the email sender and recipient
 * Edit the config file to add MySQL username and password
 
@@ -38,9 +39,13 @@ Copy the Sendgrid API key in the command below -
 <!-- Runs the script and checks for negative reviews every Tuesday, Wednesday and Thursday at 0000hrs -->
 * crontab -e
 
-  _Copy and paste the following in the editor that opens up -_
+  _Copy and paste the following in the editor that opens up after editing wherever required. -_
   
-  0 0 * * 2,3,4 /usr/bin/python /path/to/your/script.py >/dev/null 2>&1
+  MAILTO = ''
+
+  0 0 * * * source </path/to/virtualenv/virtualenvname>/bin/activate
+
+  0 0 * * * </path/to/virtualenv/virtualenvname>/bin/python </path/to/virtualenv/virtualenvname>/<cloned_repository>/scripts/get_reviews.py
 
 * sudo apt-get install python-pip python-dev libmysqlclient-dev
 * pip install -r requirements.txt
