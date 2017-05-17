@@ -155,7 +155,7 @@ def sentiment_analysis(review, rating):
 
 
 def send_email(subject, body):
-    MySQL().mysql_log('SEND ALERT', str(os.environ['LOGNAME']), "Negative reviews found Preparing alert.")
+    MySQL().mysql_log('SEND ALERT', str(os.environ['LOGNAME']), "Negative reviews found. Preparing alert.")
     try:
         sg = sendgrid.SendGridAPIClient(apikey = SENDGRID_API_KEY)
         
@@ -165,6 +165,7 @@ def send_email(subject, body):
 
         mail = Mail(from_email, subject, to_email, content)
         response = sg.client.mail.send.post(request_body=mail.get())
+        MySQL().mysql_log('SEND ALERT', str(os.environ['LOGNAME']), "Email alert sent.")
     except Exception, e:
         MySQL().mysql_log('SEND ALERT', str(os.environ['LOGNAME']), "Alert failed to be sent. Exception handled. {0}". format(e))
 
